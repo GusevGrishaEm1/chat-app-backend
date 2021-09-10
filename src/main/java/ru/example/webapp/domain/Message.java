@@ -27,8 +27,8 @@ public class Message {
     @Column(name = "date_of_send")
     private LocalDateTime dateOfSend;
 
-    @Column(name = "is_command")
-    private boolean isCommand;
+    @Column(name = "command")
+    private boolean command;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")

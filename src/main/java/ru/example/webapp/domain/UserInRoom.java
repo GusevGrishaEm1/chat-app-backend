@@ -14,11 +14,11 @@ public class UserInRoom {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "is_owner")
-    private boolean isOwner;
+    @Column(name = "owner")
+    private boolean owner;
 
-    @Column(name = "is_disconnected")
-    private boolean isDisconnected;
+    @Column(name = "disconnected")
+    private boolean disconnected;
 
     @Nullable
     @OneToOne(mappedBy = "userInRoom")

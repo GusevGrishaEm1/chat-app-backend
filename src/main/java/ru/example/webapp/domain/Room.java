@@ -4,8 +4,9 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Data
 @Entity
@@ -25,13 +26,13 @@ public class Room {
     @Column(name = "type")
     private Type type;
 
-    @Column(name = "is_private")
-    private boolean isPrivate;
+    @Column(name = "privateRoom")
+    private boolean privateRoom;
 
     @OneToMany(mappedBy = "room")
-    private Set<Message> messages = new HashSet<>();
+    private List<Message> listMessage = new ArrayList<>();
 
     @OneToMany(mappedBy = "room")
-    private Set<UserInRoom> usersInRoom = new HashSet<>();
+    private List<UserInRoom> listUserInRoom = new ArrayList<>();
 
 }

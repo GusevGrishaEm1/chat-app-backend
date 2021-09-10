@@ -5,7 +5,9 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.lang.Nullable;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -28,17 +30,17 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "is_banned")
-    private boolean isBanned;
+    @Column(name = "banned")
+    private boolean banned;
 
     @Column(name = "role")
     private Role role;
 
     @OneToMany(mappedBy = "user")
-    private Set<Message> messages = new HashSet<>();
+    private List<Message> listMessage = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private Set<UserInRoom> userInRooms = new HashSet<>();
+    private List<UserInRoom> listUserInRoom = new ArrayList<>();
 
     @Nullable
     @OneToOne(mappedBy = "user")
