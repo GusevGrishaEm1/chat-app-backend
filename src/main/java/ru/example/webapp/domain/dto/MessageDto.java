@@ -27,13 +27,4 @@ public class MessageDto {
 
     private Room room;
 
-    public static MessageDto toDto(Message message) {
-        MessageDto messageDto = new MessageDto();
-        messageDto.setId(message.getId());
-        messageDto.setValue(messageDto.getValue());
-        messageDto.setCommand(messageDto.isCommand());
-        messageDto.setUser(messageDto.getUser());
-        messageDto.setRoom(message.getRoom());
-        return messageDto;
-    }
 }

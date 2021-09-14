@@ -27,13 +27,4 @@ public class UserInRoomDto {
 
     private User user;
 
-    public static UserInRoomDto toDto(UserInRoom userInRoom) {
-        UserInRoomDto userInRoomDto = new UserInRoomDto();
-        userInRoomDto.setId(userInRoom.getId());
-        userInRoomDto.setOwner(userInRoom.isOwner());
-        userInRoomDto.setDiscInfo(userInRoom.getDiscInfo());
-        userInRoomDto.setRoom(userInRoom.getRoom());
-        userInRoomDto.setUser(userInRoom.getUser());
-        return userInRoomDto;
-    }
 }

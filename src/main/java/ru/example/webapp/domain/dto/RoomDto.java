@@ -27,14 +27,4 @@ public class RoomDto {
 
     private List<UserInRoomDto> listUserInRoom;
 
-    public static RoomDto ToDto (Room room) {
-        RoomDto roomDto = new RoomDto();
-        roomDto.setId(room.getId());
-        roomDto.setName(room.getName());
-        roomDto.setType(room.getType());
-        roomDto.setPrivateRoom(room.isPrivateRoom());
-        roomDto.setListMessage(room.getListMessage().stream().map(MessageDto::toDto).collect(Collectors.toList()));
-        roomDto.setListUserInRoom(room.getListUserInRoom().stream().map(UserInRoomDto::toDto).collect(Collectors.toList()));
-        return roomDto;
-    }
 }

@@ -23,12 +23,4 @@ public class BanInfoDto {
 
     private User user;
 
-    public static BanInfoDto toDto(BanInfo banInfo) {
-        BanInfoDto banInfoDto = new BanInfoDto();
-        banInfoDto.setId(banInfo.getId());
-        banInfoDto.setMinutes(banInfo.getMinutes());
-        banInfoDto.setDateOfBan(banInfo.getDateOfBan());
-        banInfoDto.setUser(banInfo.getUser());
-        return banInfoDto;
-    }
 }

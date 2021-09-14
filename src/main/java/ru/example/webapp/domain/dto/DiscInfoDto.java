@@ -22,12 +22,4 @@ public class DiscInfoDto {
 
     private UserInRoom userInRoom;
 
-    public static DiscInfoDto toDto(DiscInfo discInfo) {
-        DiscInfoDto discInfoDto = new DiscInfoDto();
-        discInfoDto.setId(discInfo.getId());
-        discInfoDto.setMinutes(discInfo.getMinutes());
-        discInfoDto.setDateOfDisc(discInfo.getDateOfDisc());
-        discInfoDto.setUserInRoom(discInfo.getUserInRoom());
-        return  discInfoDto;
-    }
 }
