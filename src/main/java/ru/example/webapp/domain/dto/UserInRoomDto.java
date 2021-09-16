@@ -7,7 +7,6 @@ import lombok.Setter;
 import ru.example.webapp.domain.DiscInfo;
 import ru.example.webapp.domain.Room;
 import ru.example.webapp.domain.User;
-import ru.example.webapp.domain.UserInRoom;
 
 @Getter
 @Setter

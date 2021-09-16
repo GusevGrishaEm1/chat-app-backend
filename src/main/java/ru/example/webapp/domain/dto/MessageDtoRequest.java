@@ -12,9 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MessageDto {
-
-    private long id;
+public class MessageDtoRequest {
 
     private String value;
 
@@ -25,5 +23,4 @@ public class MessageDto {
     private User user;
 
     private Room room;
-
 }

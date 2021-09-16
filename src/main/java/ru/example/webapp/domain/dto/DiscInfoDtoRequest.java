@@ -4,21 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.example.webapp.domain.User;
+import ru.example.webapp.domain.UserInRoom;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BanInfoDto {
-
-    private long id;
+public class DiscInfoDtoRequest {
 
     private int minutes;
 
-    private LocalDateTime dateOfBan;
+    private LocalDateTime dateOfDisc;
 
-    private User user;
-
+    private UserInRoom userInRoom;
 }

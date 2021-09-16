@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.example.webapp.domain.Room;
 import ru.example.webapp.domain.User;
 import java.time.LocalDateTime;
 
@@ -12,18 +11,11 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MessageDto {
+public class BanInfoDtoRequest {
 
-    private long id;
+    private int minutes;
 
-    private String value;
-
-    private LocalDateTime dateOfSend;
-
-    private boolean command;
+    private LocalDateTime dateOfBan;
 
     private User user;
-
-    private Room room;
-
 }

@@ -6,5 +6,6 @@ import ru.example.webapp.domain.User;
 
 @Repository
 public interface UserRepo extends JpaRepository<User, Long> {
-
+    public User findByUsername(String username);
+    public User findById(long id);
 }

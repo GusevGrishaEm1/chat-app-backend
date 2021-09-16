@@ -4,16 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.example.webapp.domain.*;
+import ru.example.webapp.domain.BanInfo;
+import ru.example.webapp.domain.Role;
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
-
-    private long id;
+public class UserDtoRequest {
 
     private String username;
 
@@ -28,5 +27,4 @@ public class UserDto {
     private List<MessageDto> listMessage;
 
     private List<UserInRoomDto> listUserInRoom;
-
 }

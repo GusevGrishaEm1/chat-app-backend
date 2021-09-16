@@ -6,5 +6,5 @@ import ru.example.webapp.domain.Room;
 
 @Repository
 public interface RoomRepo extends JpaRepository<Room, Long> {
-
+    public Room findById(long id);
 }
