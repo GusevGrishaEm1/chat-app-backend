@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.example.webapp.domain.dto.UserInRoomDto;
 import ru.example.webapp.domain.dto.UserInRoomDtoRequest;
+import ru.example.webapp.exception.UserInRoomNotFoundException;
 import ru.example.webapp.service.UserInRoomService;
 import java.util.List;
 
@@ -15,17 +16,17 @@ public class UserInRoomController {
     UserInRoomService userInRoomService;
 
     @GetMapping()
-    public List<UserInRoomDto> getListUserInRoom() {
+    public List<UserInRoomDto> getListUserInRoom() throws UserInRoomNotFoundException {
         return userInRoomService.getListUserInRoom();
     }
 
     @GetMapping("/{id}")
-    public UserInRoomDto getUserInRoom(@PathVariable long id) {
+    public UserInRoomDto getUserInRoom(@PathVariable long id) throws UserInRoomNotFoundException {
         return userInRoomService.getUserInRoom(id);
     }
 
     @DeleteMapping("/{id}")
-    public long deleteUserInRoom(@PathVariable long id) {
+    public long deleteUserInRoom(@PathVariable long id) throws UserInRoomNotFoundException {
         return userInRoomService.deleteUserInRoom(id);
     }
 

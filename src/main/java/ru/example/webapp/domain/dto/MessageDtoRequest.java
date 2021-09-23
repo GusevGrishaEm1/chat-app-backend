@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.example.webapp.domain.Room;
-import ru.example.webapp.domain.User;
 import java.time.LocalDateTime;
 
 @Getter
@@ -20,7 +18,7 @@ public class MessageDtoRequest {
 
     private boolean command;
 
-    private User user;
+    private UserDto user;
 
-    private Room room;
+    private RoomDto room;
 }

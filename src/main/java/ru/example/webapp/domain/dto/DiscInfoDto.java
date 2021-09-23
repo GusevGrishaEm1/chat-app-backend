@@ -20,6 +20,6 @@ public class DiscInfoDto {
 
     private LocalDateTime dateOfDisc;
 
-    private UserInRoom userInRoom;
+    private UserInRoomDto userInRoom;
 
 }

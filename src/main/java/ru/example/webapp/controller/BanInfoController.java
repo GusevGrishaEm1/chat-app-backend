@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.example.webapp.domain.dto.BanInfoDto;
 import ru.example.webapp.domain.dto.BanInfoDtoRequest;
+import ru.example.webapp.exception.BanInfoNotFoundException;
 import ru.example.webapp.service.BanInfoService;
 import java.util.List;
 
@@ -15,17 +16,17 @@ public class BanInfoController {
     BanInfoService banInfoService;
 
     @GetMapping()
-    public List<BanInfoDto> getListBanInfo() {
+    public List<BanInfoDto> getListBanInfo() throws BanInfoNotFoundException {
         return banInfoService.getListBanInfo();
     }
 
     @GetMapping("/{id}")
-    public BanInfoDto getBanInfo(@PathVariable long id) {
+    public BanInfoDto getBanInfo(@PathVariable long id) throws BanInfoNotFoundException {
         return banInfoService.getBanInfo(id);
     }
 
     @DeleteMapping("/{id}")
-    public long deleteBanInfo(@PathVariable long id) {
+    public long deleteBanInfo(@PathVariable long id) throws BanInfoNotFoundException {
         return banInfoService.deleteBanInfo(id);
     }
 

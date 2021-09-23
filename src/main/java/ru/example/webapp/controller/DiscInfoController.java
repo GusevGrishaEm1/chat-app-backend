@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.example.webapp.domain.dto.DiscInfoDto;
 import ru.example.webapp.domain.dto.DiscInfoDtoRequest;
+import ru.example.webapp.exception.DiscInfoNotFoundException;
 import ru.example.webapp.service.DiscInfoService;
 import java.util.List;
 
@@ -15,17 +16,17 @@ public class DiscInfoController {
     DiscInfoService discInfoService;
 
     @GetMapping()
-    public List<DiscInfoDto> getListDiscInfo() {
+    public List<DiscInfoDto> getListDiscInfo() throws DiscInfoNotFoundException {
         return discInfoService.getListDiscInfo();
     }
 
     @GetMapping("/{id}")
-    public DiscInfoDto getDiscInfo(@PathVariable long id) {
+    public DiscInfoDto getDiscInfo(@PathVariable long id) throws DiscInfoNotFoundException {
         return discInfoService.getDiscInfo(id);
     }
 
     @DeleteMapping("/{id}")
-    public long deleteDiscInfo(@PathVariable long id) {
+    public long deleteDiscInfo(@PathVariable long id) throws DiscInfoNotFoundException {
         return discInfoService.deleteDiscInfo(id);
     }
 

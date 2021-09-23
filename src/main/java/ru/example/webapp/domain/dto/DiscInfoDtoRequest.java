@@ -17,5 +17,5 @@ public class DiscInfoDtoRequest {
 
     private LocalDateTime dateOfDisc;
 
-    private UserInRoom userInRoom;
+    private UserInRoomDto userInRoom;
 }

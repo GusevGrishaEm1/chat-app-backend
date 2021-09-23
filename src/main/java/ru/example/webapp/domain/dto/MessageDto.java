@@ -22,8 +22,8 @@ public class MessageDto {
 
     private boolean command;
 
-    private User user;
+    private UserDto user;
 
-    private Room room;
+    private RoomDto room;
 
 }

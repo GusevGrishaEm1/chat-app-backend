@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.example.webapp.domain.UserInRoom;
 import ru.example.webapp.domain.dto.UserInRoomDto;
 import ru.example.webapp.domain.dto.UserInRoomDtoRequest;
+import ru.example.webapp.exception.UserInRoomNotFoundException;
 import ru.example.webapp.mapper.UserInRoomMapper;
 import ru.example.webapp.repository.UserInRoomRepo;
 import java.util.List;
@@ -25,10 +26,9 @@ public class UserInRoomService {
         return userInRoomMapper.toDto(userInRoomEntity);
     }
 
-    public long deleteUserInRoom(long id) {
+    public long deleteUserInRoom(long id)  throws UserInRoomNotFoundException {
         if (userInRoomRepo.findById(id) == null)
-            // add throw Exception
-            return -1;
+            throw new UserInRoomNotFoundException("UserInRoom with " + id + " not found");
         else {
             userInRoomRepo.deleteById(id);
             return id;
@@ -43,24 +43,23 @@ public class UserInRoomService {
     }
 
     @Transactional(readOnly = true)
-    public UserInRoomDto getUserInRoom(long id) {
+    public UserInRoomDto getUserInRoom(long id) throws UserInRoomNotFoundException {
         UserInRoom userInRoomEntity = userInRoomRepo.findById(id);
         if (userInRoomEntity==null)
-            // add throw Exception
-            return null;
+            throw new UserInRoomNotFoundException("UserInRoom with " + id + " not found");
         else {
             return userInRoomMapper.toDto(userInRoomEntity);
         }
     }
 
     @Transactional(readOnly = true)
-    public List<UserInRoomDto> getListUserInRoom() {
+    public List<UserInRoomDto> getListUserInRoom() throws UserInRoomNotFoundException {
         List<UserInRoom> userInRoomList = userInRoomRepo.findAll();
-        if (userInRoomList == null)
-            // add throw Exception
-            return null;
+        if (userInRoomList.isEmpty())
+            throw new UserInRoomNotFoundException("UserInRoomList is empty");
         else {
             return userInRoomMapper.toDto(userInRoomList);
         }
     }
+
 }

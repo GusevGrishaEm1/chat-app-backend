@@ -22,8 +22,8 @@ public class UserInRoomDto {
 
     private DiscInfo discInfo;
 
-    private Room room;
+    private RoomDto room;
 
-    private User user;
+    private UserDto user;
 
 }

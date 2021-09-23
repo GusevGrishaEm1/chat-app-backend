@@ -22,7 +22,7 @@ public class UserDtoRequest {
 
     private Role role;
 
-    private BanInfo banInfo;
+    private BanInfoDto banInfo;
 
     private List<MessageDto> listMessage;
 

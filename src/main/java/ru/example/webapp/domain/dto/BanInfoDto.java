@@ -19,6 +19,6 @@ public class BanInfoDto {
 
     private LocalDateTime dateOfBan;
 
-    private User user;
+    private UserDto user;
 
 }

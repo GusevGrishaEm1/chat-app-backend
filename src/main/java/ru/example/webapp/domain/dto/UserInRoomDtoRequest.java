@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.example.webapp.domain.DiscInfo;
-import ru.example.webapp.domain.Room;
-import ru.example.webapp.domain.User;
 
 @Getter
 @Setter
@@ -20,7 +18,7 @@ public class UserInRoomDtoRequest {
 
     private DiscInfo discInfo;
 
-    private Room room;
+    private RoomDto room;
 
-    private User user;
+    private UserDto user;
 }

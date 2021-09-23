@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.example.webapp.domain.BanInfo;
 import ru.example.webapp.domain.dto.BanInfoDto;
 import ru.example.webapp.domain.dto.BanInfoDtoRequest;
+import ru.example.webapp.exception.BanInfoNotFoundException;
 import ru.example.webapp.mapper.BanInfoMapper;
 import ru.example.webapp.repository.BanInfoRepo;
 import java.util.List;
@@ -25,10 +26,9 @@ public class BanInfoService {
         return banInfoMapper.toDto(banInfoEntity);
     }
 
-    public long deleteBanInfo(long id) {
+    public long deleteBanInfo(long id) throws BanInfoNotFoundException {
         if (banInfoRepo.findById(id) == null)
-            // add throw Exception
-            return -1;
+            throw new BanInfoNotFoundException("BanInfo with id " + id + " not found");
         else {
             banInfoRepo.deleteById(id);
             return id;
@@ -43,22 +43,20 @@ public class BanInfoService {
     }
 
     @Transactional(readOnly = true)
-    public BanInfoDto getBanInfo(long id) {
+    public BanInfoDto getBanInfo(long id) throws BanInfoNotFoundException {
         BanInfo banInfoEntity = banInfoRepo.findById(id);
         if (banInfoEntity==null)
-            // add throw Exception
-            return null;
+            throw new BanInfoNotFoundException("BanInfo with id " + id + " not found");
         else {
             return banInfoMapper.toDto(banInfoEntity);
         }
     }
 
     @Transactional(readOnly = true)
-    public List<BanInfoDto> getListBanInfo() {
+    public List<BanInfoDto> getListBanInfo()throws BanInfoNotFoundException {
         List<BanInfo> messages = banInfoRepo.findAll();
-        if (messages == null)
-            // add throw Exception
-            return null;
+        if (messages.isEmpty())
+            throw new BanInfoNotFoundException("BanInfoList is empty");
         else {
             return banInfoMapper.toDto(messages);
         }
