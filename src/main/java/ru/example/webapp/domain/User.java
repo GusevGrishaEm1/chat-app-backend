@@ -40,7 +40,6 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<UserInRoom> listUserInRoom = new ArrayList<>();
 
-    @Nullable
     @OneToOne(mappedBy = "user")
     private  BanInfo banInfo;
 

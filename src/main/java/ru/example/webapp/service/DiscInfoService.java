@@ -15,15 +15,15 @@ import java.util.List;
 public class DiscInfoService {
 
     @Autowired
-    DiscInfoRepo discInfoRepo;
+    private DiscInfoRepo discInfoRepo;
 
-    DiscInfoMapper discInfoMapper;
+    private DiscInfoMapper discInfoMapper;
 
     @Transactional
     public DiscInfoDto addDiscInfo(DiscInfoDtoRequest discInfoDtoRequest) {
-        DiscInfo discInfoEntity = discInfoMapper.toEntity(discInfoDtoRequest);
+        DiscInfo discInfoEntity = discInfoMapper.INSTANCE.toEntity(discInfoDtoRequest);
         discInfoRepo.save(discInfoEntity);
-        return discInfoMapper.toDto(discInfoEntity);
+        return discInfoMapper.INSTANCE.toDto(discInfoEntity);
     }
 
     public long deleteDiscInfo(long id) throws DiscInfoNotFoundException {
@@ -37,9 +37,9 @@ public class DiscInfoService {
 
     @Transactional
     public DiscInfoDto editDiscInfo(DiscInfoDto DiscInfoDto) {
-        DiscInfo discInfoEntity = discInfoMapper.toEntity(DiscInfoDto);
+        DiscInfo discInfoEntity = discInfoMapper.INSTANCE.toEntity(DiscInfoDto);
         discInfoRepo.save(discInfoEntity);
-        return discInfoMapper.toDto(discInfoEntity);
+        return discInfoMapper.INSTANCE.toDto(discInfoEntity);
     }
 
     @Transactional(readOnly = true)
@@ -48,7 +48,7 @@ public class DiscInfoService {
         if (discInfoEntity==null)
             throw new DiscInfoNotFoundException("DiscInfo with id " + id + "not found");
         else {
-            return discInfoMapper.toDto(discInfoEntity);
+            return discInfoMapper.INSTANCE.toDto(discInfoEntity);
         }
     }
 
@@ -58,7 +58,7 @@ public class DiscInfoService {
         if (discInfoList.isEmpty())
             throw new DiscInfoNotFoundException("DiscInfoList is empty");
         else {
-            return discInfoMapper.toDto(discInfoList);
+            return discInfoMapper.INSTANCE.toDto(discInfoList);
         }
     }
 }

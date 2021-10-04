@@ -4,9 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.example.webapp.domain.DiscInfo;
-import ru.example.webapp.domain.Room;
-import ru.example.webapp.domain.User;
+import ru.example.webapp.domain.dto.room.RoomDto;
+import ru.example.webapp.domain.dto.user.UserDto;
 
 @Getter
 @Setter
@@ -20,7 +19,7 @@ public class UserInRoomDto {
 
     private boolean disconnected;
 
-    private DiscInfo discInfo;
+    private DiscInfoDto discInfo;
 
     private RoomDto room;
 

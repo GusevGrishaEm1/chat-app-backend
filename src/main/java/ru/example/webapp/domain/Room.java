@@ -20,7 +20,7 @@ public class Room {
 
     @NotBlank(message = "Please, fill the name of room")
     @Length(max = 64, message = "name is too long" )
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
 
     @Column(name = "type")

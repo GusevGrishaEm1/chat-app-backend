@@ -2,10 +2,11 @@ package ru.example.webapp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.example.webapp.domain.dto.MessageDto;
-import ru.example.webapp.domain.dto.MessageDtoRequest;
-import ru.example.webapp.domain.dto.RoomDto;
-import ru.example.webapp.domain.dto.UserDto;
+import ru.example.webapp.domain.dto.*;
+import ru.example.webapp.domain.dto.message.MessageDto;
+import ru.example.webapp.domain.dto.message.MessageDtoRequest;
+import ru.example.webapp.domain.dto.message.RemoveMessageDto;
+import ru.example.webapp.domain.dto.message.SendMessageDto;
 import ru.example.webapp.exception.MessageNotFoundException;
 import ru.example.webapp.exception.UserAccessException;
 import ru.example.webapp.service.MessageService;
@@ -16,7 +17,7 @@ import java.util.List;
 public class MessageController {
 
     @Autowired
-    MessageService messageService;
+    private MessageService messageService;
 
     @GetMapping()
     public List<MessageDto> getListMessage() throws MessageNotFoundException {
@@ -43,11 +44,11 @@ public class MessageController {
         return messageService.editMessage(message);
     }
 
-    @PostMapping("/send") MessageDto sendMessage(@RequestBody MessageDtoRequest messageDtoRequest, @RequestBody UserDto userDto, @RequestBody RoomDto roomDto) throws UserAccessException {
-        return messageService.sendMessage(messageDtoRequest, userDto, roomDto);
+    @PostMapping("/send") MessageDto sendMessage(@RequestBody SendMessageDto sendMessage) throws UserAccessException {
+        return messageService.sendMessage(sendMessage.getMessageDtoRequest(), sendMessage.getUserInRoom());
     }
 
-    @DeleteMapping("/delete/{id}") long deleteMessage(@PathVariable long id, @RequestBody UserDto userDto) throws UserAccessException, MessageNotFoundException {
-        return messageService.removeMessage(id, userDto);
+    @DeleteMapping("/delete/{id}") long deleteMessage(@RequestBody RemoveMessageDto removeMessageDto) throws UserAccessException, MessageNotFoundException {
+        return messageService.removeMessage(removeMessageDto.getId(), removeMessageDto.getUserInRoom());
     }
 }

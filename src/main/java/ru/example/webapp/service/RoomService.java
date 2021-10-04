@@ -6,6 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.example.webapp.domain.Role;
 import ru.example.webapp.domain.Room;
 import ru.example.webapp.domain.dto.*;
+import ru.example.webapp.domain.dto.room.RoomDto;
+import ru.example.webapp.domain.dto.room.RoomDtoRequest;
+import ru.example.webapp.domain.dto.user.UserDto;
 import ru.example.webapp.exception.RoomNotFoundException;
 import ru.example.webapp.exception.UserAccessException;
 import ru.example.webapp.mapper.RoomMapper;
@@ -16,21 +19,21 @@ import java.util.List;
 public class RoomService {
 
     @Autowired
-    RoomRepo roomRepo;
+    private RoomRepo roomRepo;
 
     @Autowired
-    UserInRoomService userInRoomService;
+    private UserInRoomService userInRoomService;
 
     @Autowired
-    DiscInfoService discInfoService;
+    private DiscInfoService discInfoService;
 
-    RoomMapper roomMapper;
+    private RoomMapper roomMapper;
 
     @Transactional
     public RoomDto addRoom(RoomDtoRequest roomDtoRequest) {
-        Room roomEntity = roomMapper.toEntity(roomDtoRequest);
+        Room roomEntity = roomMapper.INSTANCE.toEntity(roomDtoRequest);
         roomRepo.save(roomEntity);
-        return roomMapper.toDto(roomEntity);
+        return roomMapper.INSTANCE.toDto(roomEntity);
     }
 
     public long deleteRoom(long id) throws RoomNotFoundException {
@@ -46,7 +49,7 @@ public class RoomService {
     public RoomDto editRoom(RoomDto roomDto) {
         Room roomEntity = roomMapper.toEntity(roomDto);
         roomRepo.save(roomEntity);
-        return roomMapper.toDto(roomEntity);
+        return roomMapper.INSTANCE.toDto(roomEntity);
     }
 
     @Transactional(readOnly = true)
@@ -55,7 +58,7 @@ public class RoomService {
         if (roomEntity == null)
             throw new RoomNotFoundException("Room with id " + id + " not found");
         else {
-            return roomMapper.toDto(roomEntity);
+            return roomMapper.INSTANCE.toDto(roomEntity);
         }
     }
 
@@ -65,13 +68,14 @@ public class RoomService {
         if (rooms.isEmpty())
             throw new RoomNotFoundException("RoomList is empty");
         else {
-            return roomMapper.toDto(rooms);
+            return roomMapper.INSTANCE.toDto(rooms);
         }
     }
 
     public RoomDto createRoom(RoomDtoRequest roomDtoRequest,
                               UserDto userDto,
-                              UserInRoomDtoRequest userInRoomDtoRequest) throws UserAccessException {
+                              UserInRoomDtoRequest userInRoomDtoRequest) throws UserAccessException
+    {
         if (!userDto.isBanned()) {
             RoomDto roomDto = addRoom(roomDtoRequest);
             userInRoomDtoRequest.setRoom(roomDto);
@@ -89,7 +93,8 @@ public class RoomService {
                                      UserDto userDtoFirst,
                                      UserInRoomDtoRequest userInRoomDtoRequestFirst,
                                      UserDto userDtoSecond,
-                                     UserInRoomDtoRequest userInRoomDtoRequestSecond) throws UserAccessException {
+                                     UserInRoomDtoRequest userInRoomDtoRequestSecond) throws UserAccessException
+    {
         if (!userDtoFirst.isBanned()) {
             RoomDto roomDto = addRoom(roomDtoRequest);
             userInRoomDtoRequestFirst.setRoom(roomDto);
@@ -116,7 +121,8 @@ public class RoomService {
 
     public UserInRoomDto disconnectUserFromRoom(UserInRoomDto whoDisconnect,
                                                 UserInRoomDto whoIsDisconnected,
-                                                DiscInfoDtoRequest discInfoDtoRequest) throws UserAccessException {
+                                                DiscInfoDtoRequest discInfoDtoRequest) throws UserAccessException
+    {
         if ((!whoDisconnect.getUser().isBanned() && whoDisconnect.isOwner()) || (whoDisconnect.getUser().getRole() == Role.ADMIN)) {
             whoIsDisconnected.setDisconnected(true);
             discInfoService.addDiscInfo(discInfoDtoRequest);
@@ -129,7 +135,8 @@ public class RoomService {
     public UserInRoomDto inviteUserInRoom(UserInRoomDto whoInvite,
                                           UserInRoomDtoRequest whoIsInvited,
                                           RoomDto roomDto,
-                                          UserDto userDto) throws UserAccessException {
+                                          UserDto userDto) throws UserAccessException
+    {
         if (!whoInvite.getUser().isBanned() && (!whoIsInvited.isDisconnected() && !whoIsInvited.getUser().isBanned() ) ) {
             whoIsInvited.setRoom(roomDto);
             whoIsInvited.setUser(userDto);
@@ -140,5 +147,21 @@ public class RoomService {
             throw new UserAccessException("User " + whoInvite.getUser().getUsername() + " does not have permission to do this");
         }
     }
+
+    public long deleteRoomByName(String name) throws RoomNotFoundException {
+        Room roomFromDB = roomRepo.findByName(name);
+        if(roomFromDB!= null) {
+            deleteRoom(roomFromDB.getId());
+        }
+        else {
+            throw new RoomNotFoundException("Room with name " + name + " not found");
+        }
+        return roomFromDB.getId();
+    }
+
+    public RoomDto getByName(String username) {
+        return roomMapper.toDto(roomRepo.findByName(username));
+    }
+
 
 }

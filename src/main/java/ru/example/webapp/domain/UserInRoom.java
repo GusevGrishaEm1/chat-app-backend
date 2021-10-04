@@ -20,7 +20,6 @@ public class UserInRoom {
     @Column(name = "disconnected")
     private boolean disconnected;
 
-    @Nullable
     @OneToOne(mappedBy = "userInRoom")
     private DiscInfo discInfo;
 

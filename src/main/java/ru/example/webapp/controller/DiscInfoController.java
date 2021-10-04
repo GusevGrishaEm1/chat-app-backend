@@ -13,7 +13,7 @@ import java.util.List;
 public class DiscInfoController {
 
     @Autowired
-    DiscInfoService discInfoService;
+    private DiscInfoService discInfoService;
 
     @GetMapping()
     public List<DiscInfoDto> getListDiscInfo() throws DiscInfoNotFoundException {

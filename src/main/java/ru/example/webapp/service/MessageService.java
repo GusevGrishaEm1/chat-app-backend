@@ -5,10 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.example.webapp.domain.Message;
 import ru.example.webapp.domain.Role;
-import ru.example.webapp.domain.dto.MessageDto;
-import ru.example.webapp.domain.dto.MessageDtoRequest;
-import ru.example.webapp.domain.dto.RoomDto;
-import ru.example.webapp.domain.dto.UserDto;
+import ru.example.webapp.domain.dto.*;
+import ru.example.webapp.domain.dto.message.MessageDto;
+import ru.example.webapp.domain.dto.message.MessageDtoRequest;
 import ru.example.webapp.exception.MessageNotFoundException;
 import ru.example.webapp.exception.UserAccessException;
 import ru.example.webapp.mapper.MessageMapper;
@@ -20,15 +19,15 @@ import java.util.List;
 public class MessageService {
 
     @Autowired
-    MessageRepo messageRepo;
+    private MessageRepo messageRepo;
 
-    MessageMapper messageMapper;
+    private MessageMapper messageMapper;
 
     @Transactional
     public MessageDto addMessage(MessageDtoRequest messageDtoRequest) {
-        Message messageEntity = messageMapper.toEntity(messageDtoRequest);
+        Message messageEntity = messageMapper.INSTANCE.toEntity(messageDtoRequest);
         messageRepo.save(messageEntity);
-        return messageMapper.toDto(messageEntity);
+        return messageMapper.INSTANCE.toDto(messageEntity);
     }
 
     public long deleteMessage(long id) throws MessageNotFoundException {
@@ -44,7 +43,7 @@ public class MessageService {
     public MessageDto editMessage(MessageDto messageDto) {
         Message messageEntity = messageMapper.toEntity(messageDto);
         messageRepo.save(messageEntity);
-        return messageMapper.toDto(messageEntity);
+        return messageMapper.INSTANCE.toDto(messageEntity);
     }
 
     @Transactional(readOnly = true)
@@ -53,7 +52,7 @@ public class MessageService {
         if (messageEntity == null)
             throw new MessageNotFoundException("Message with id " + id + " not found");
         else {
-            return messageMapper.toDto(messageEntity);
+            return messageMapper.INSTANCE.toDto(messageEntity);
         }
     }
 
@@ -63,30 +62,28 @@ public class MessageService {
         if (messages.isEmpty())
             throw new MessageNotFoundException("MessageList is empty");
         else {
-            return messageMapper.toDto(messages);
+            return messageMapper.INSTANCE.toDto(messages);
         }
     }
 
     public MessageDto sendMessage(MessageDtoRequest messageDtoRequest,
-                                  UserDto userDto,
-                                  RoomDto roomDto) throws UserAccessException {
-        if (!userDto.isBanned()) {
-            messageDtoRequest.setUser(userDto);
-            messageDtoRequest.setRoom(roomDto);
+                                  UserInRoomDto userInRoom) throws UserAccessException
+    {
+        if (!userInRoom.getUser().isBanned()) {
+            messageDtoRequest.setUser(userInRoom.getUser());
+            messageDtoRequest.setRoom(userInRoom.getRoom());
             messageDtoRequest.setDateOfSend(LocalDateTime.now());
-            //add parser for messages to find commands
-            messageDtoRequest.setCommand(false);
             return addMessage(messageDtoRequest);
         } else {
-            throw new UserAccessException("User " + userDto.getUsername() + " does not have permission to do this");
+            throw new UserAccessException("User " + userInRoom.getUser().getUsername() + " does not have permission to do this");
         }
     }
 
-    public long removeMessage(long id, UserDto userDto) throws UserAccessException, MessageNotFoundException {
-        if (userDto.getRole() == Role.ADMIN || userDto.getRole() == Role.MODERATOR) {
+    public long removeMessage(long id, UserInRoomDto userInRoom) throws UserAccessException, MessageNotFoundException {
+        if (userInRoom.getUser().getRole() == Role.ADMIN || userInRoom.getUser().getRole() == Role.MODERATOR) {
             return deleteMessage(id);
         } else {
-            throw new UserAccessException("User "+ userDto.getUsername() +  " does not have permission to do this");
+            throw new UserAccessException("User "+ userInRoom.getUser().getUsername() +  " does not have permission to do this");
         }
     }
 

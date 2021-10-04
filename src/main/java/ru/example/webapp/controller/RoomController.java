@@ -3,6 +3,8 @@ package ru.example.webapp.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.example.webapp.domain.dto.*;
+import ru.example.webapp.domain.dto.room.*;
+import ru.example.webapp.domain.dto.user.UserDto;
 import ru.example.webapp.exception.RoomNotFoundException;
 import ru.example.webapp.exception.UserAccessException;
 import ru.example.webapp.service.RoomService;
@@ -13,7 +15,7 @@ import java.util.List;
 public class RoomController {
 
     @Autowired
-    RoomService roomService;
+    private RoomService roomService;
 
     @GetMapping()
     public List<RoomDto> getListRoom() throws RoomNotFoundException {
@@ -41,38 +43,48 @@ public class RoomController {
     }
 
     @PostMapping("/create/room")
-    public RoomDto createRoom(@RequestBody RoomDtoRequest roomDtoRequest,
-                              @RequestBody UserDto userDto,
-                              @RequestBody UserInRoomDtoRequest userInRoomDto) throws UserAccessException {
-        return roomService.createRoom(roomDtoRequest, userDto, userInRoomDto);
+    public RoomDto createRoom(@RequestBody CreateRoomDto createRoomDto) throws UserAccessException {
+        return roomService.createRoom(createRoomDto.getRoomDtoRequest(),
+                createRoomDto.getUserDto(),
+                createRoomDto.getUserInRoomDtoRequest()
+        );
     }
 
     @PostMapping("/create/privateRoom")
-    public RoomDto createPrivateRoom(@RequestBody RoomDtoRequest roomDtoRequest,
-                                     @RequestBody UserDto userDtoFirst,
-                                     @RequestBody UserInRoomDtoRequest userInRoomDtoRequestFirst,
-                                     @RequestBody UserDto userDtoSecond,
-                                     @RequestBody UserInRoomDtoRequest userInRoomDtoRequestSecond) throws UserAccessException {
-            return roomService.createPrivateRoom(roomDtoRequest, userDtoFirst, userInRoomDtoRequestFirst, userDtoSecond, userInRoomDtoRequestSecond);
+    public RoomDto createPrivateRoom(@RequestBody CreatePrivateRoomDto createPrivateRoomDto) throws UserAccessException {
+            return roomService.createPrivateRoom(
+                    createPrivateRoomDto.getRoomDtoRequest(),
+                    createPrivateRoomDto.getUserDtoFirst(),
+                    createPrivateRoomDto.getUserInRoomDtoRequestFirst(),
+                    createPrivateRoomDto.getUserDtoSecond(),
+                    createPrivateRoomDto.getUserInRoomDtoRequestSecond()
+            );
     }
 
     @PostMapping("/invite/userInRoom")
-    public UserInRoomDto inviteUserInRoom(@RequestBody UserInRoomDto whoInvite,
-                                          @RequestBody UserInRoomDtoRequest whoIsInvited,
-                                          @RequestBody RoomDto roomDto,
-                                          @RequestBody UserDto userDto) throws UserAccessException {
-        return roomService.inviteUserInRoom(whoInvite, whoIsInvited, roomDto, userDto);
+    public UserInRoomDto inviteUserInRoom(@RequestBody InviteUserInRoomDto inviteUserInRoomDto) throws UserAccessException {
+        return roomService.inviteUserInRoom(
+                inviteUserInRoomDto.getWhoInvite(),
+                inviteUserInRoomDto.getWhoIsInvited(),
+                inviteUserInRoomDto.getRoomDto(),
+                inviteUserInRoomDto.getUserDto()
+        );
     }
 
     @PostMapping("/disconnect/userInRoom")
-    public UserInRoomDto disconnectUserInRoom(@RequestBody UserInRoomDto whoDisconnect,
-                                              @RequestBody UserInRoomDto whoIsDisconnected,
-                                              @RequestBody DiscInfoDtoRequest discInfoDtoRequest) throws UserAccessException {
-        return roomService.disconnectUserFromRoom(whoDisconnect, whoIsDisconnected,discInfoDtoRequest);
+    public UserInRoomDto disconnectUserInRoom(@RequestBody DisconnectUserFromRoomDto disconnectUserFromRoomDto) throws UserAccessException {
+        return roomService.disconnectUserFromRoom(
+                disconnectUserFromRoomDto.getWhoDisconnect(),
+                disconnectUserFromRoomDto.getWhoIsDisconnected(),
+                disconnectUserFromRoomDto.getDiscInfoDtoRequest()
+        );
     }
 
     @PutMapping("/rename/room")
-    public RoomDto renameRoom(@RequestBody UserInRoomDto userInRoomDto, @RequestParam String newName) throws UserAccessException {
-        return roomService.renameRoom(userInRoomDto, newName);
+    public RoomDto renameRoom(@RequestBody RenameRoomDto renameRoomDto) throws UserAccessException {
+        return roomService.renameRoom(
+                renameRoomDto.getUserInRoomDto(),
+                renameRoomDto.getNewName()
+        );
     }
 }

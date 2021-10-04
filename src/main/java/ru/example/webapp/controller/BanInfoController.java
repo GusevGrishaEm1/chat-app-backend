@@ -13,7 +13,7 @@ import java.util.List;
 public class BanInfoController {
 
     @Autowired
-    BanInfoService banInfoService;
+    private BanInfoService banInfoService;
 
     @GetMapping()
     public List<BanInfoDto> getListBanInfo() throws BanInfoNotFoundException {

@@ -13,7 +13,7 @@ import java.util.List;
 public class UserInRoomController {
 
     @Autowired
-    UserInRoomService userInRoomService;
+    private UserInRoomService userInRoomService;
 
     @GetMapping()
     public List<UserInRoomDto> getListUserInRoom() throws UserInRoomNotFoundException {

@@ -15,13 +15,13 @@ import java.util.List;
 public class BanInfoService {
 
     @Autowired
-    BanInfoRepo banInfoRepo;
+    private BanInfoRepo banInfoRepo;
 
-    BanInfoMapper banInfoMapper;
+    private BanInfoMapper banInfoMapper;
 
     @Transactional
     public BanInfoDto addBanInfo(BanInfoDtoRequest banInfoDtoRequest) {
-        BanInfo banInfoEntity = banInfoMapper.toEntity(banInfoDtoRequest);
+        BanInfo banInfoEntity = banInfoMapper.INSTANCE.toEntity(banInfoDtoRequest);
         banInfoRepo.save(banInfoEntity);
         return banInfoMapper.toDto(banInfoEntity);
     }
