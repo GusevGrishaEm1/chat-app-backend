@@ -3,23 +3,21 @@ package ru.example.webapp.mapper;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Generated;
-import ru.example.webapp.domain.BanInfo;
 import ru.example.webapp.domain.DiscInfo;
 import ru.example.webapp.domain.Message;
 import ru.example.webapp.domain.Room;
 import ru.example.webapp.domain.User;
 import ru.example.webapp.domain.UserInRoom;
-import ru.example.webapp.domain.dto.BanInfoDto;
 import ru.example.webapp.domain.dto.DiscInfoDto;
+import ru.example.webapp.domain.dto.UserInRoomDto;
+import ru.example.webapp.domain.dto.UserInRoomDtoRequest;
 import ru.example.webapp.domain.dto.message.MessageDto;
 import ru.example.webapp.domain.dto.room.RoomDto;
 import ru.example.webapp.domain.dto.user.UserDto;
-import ru.example.webapp.domain.dto.UserInRoomDto;
-import ru.example.webapp.domain.dto.UserInRoomDtoRequest;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-10-04T22:54:35+0400",
+    date = "2021-10-05T12:14:43+0400",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 1.8.0_301 (Oracle Corporation)"
 )
 public class UserInRoomMapperImpl implements UserInRoomMapper {
@@ -106,34 +104,6 @@ public class UserInRoomMapperImpl implements UserInRoomMapper {
         return discInfoDto;
     }
 
-    protected BanInfoDto banInfoToBanInfoDto(BanInfo banInfo) {
-        if ( banInfo == null ) {
-            return null;
-        }
-
-        BanInfoDto banInfoDto = new BanInfoDto();
-
-        banInfoDto.setId( banInfo.getId() );
-        banInfoDto.setMinutes( banInfo.getMinutes() );
-        banInfoDto.setDateOfBan( banInfo.getDateOfBan() );
-        banInfoDto.setUser( userToUserDto( banInfo.getUser() ) );
-
-        return banInfoDto;
-    }
-
-    protected List<MessageDto> messageListToMessageDtoList(List<Message> list) {
-        if ( list == null ) {
-            return null;
-        }
-
-        List<MessageDto> list1 = new ArrayList<MessageDto>( list.size() );
-        for ( Message message : list ) {
-            list1.add( messageToMessageDto( message ) );
-        }
-
-        return list1;
-    }
-
     protected UserDto userToUserDto(User user) {
         if ( user == null ) {
             return null;
@@ -146,9 +116,6 @@ public class UserInRoomMapperImpl implements UserInRoomMapper {
         userDto.setPassword( user.getPassword() );
         userDto.setBanned( user.isBanned() );
         userDto.setRole( user.getRole() );
-        userDto.setBanInfo( banInfoToBanInfoDto( user.getBanInfo() ) );
-        userDto.setListMessage( messageListToMessageDtoList( user.getListMessage() ) );
-        userDto.setListUserInRoom( toDto( user.getListUserInRoom() ) );
 
         return userDto;
     }
@@ -168,6 +135,19 @@ public class UserInRoomMapperImpl implements UserInRoomMapper {
         messageDto.setRoom( roomToRoomDto( message.getRoom() ) );
 
         return messageDto;
+    }
+
+    protected List<MessageDto> messageListToMessageDtoList(List<Message> list) {
+        if ( list == null ) {
+            return null;
+        }
+
+        List<MessageDto> list1 = new ArrayList<MessageDto>( list.size() );
+        for ( Message message : list ) {
+            list1.add( messageToMessageDto( message ) );
+        }
+
+        return list1;
     }
 
     protected RoomDto roomToRoomDto(Room room) {
@@ -202,6 +182,39 @@ public class UserInRoomMapperImpl implements UserInRoomMapper {
         return discInfo;
     }
 
+    protected User userDtoToUser(UserDto userDto) {
+        if ( userDto == null ) {
+            return null;
+        }
+
+        User user = new User();
+
+        user.setId( userDto.getId() );
+        user.setUsername( userDto.getUsername() );
+        user.setPassword( userDto.getPassword() );
+        user.setBanned( userDto.isBanned() );
+        user.setRole( userDto.getRole() );
+
+        return user;
+    }
+
+    protected Message messageDtoToMessage(MessageDto messageDto) {
+        if ( messageDto == null ) {
+            return null;
+        }
+
+        Message message = new Message();
+
+        message.setId( messageDto.getId() );
+        message.setValue( messageDto.getValue() );
+        message.setDateOfSend( messageDto.getDateOfSend() );
+        message.setCommand( messageDto.isCommand() );
+        message.setUser( userDtoToUser( messageDto.getUser() ) );
+        message.setRoom( roomDtoToRoom( messageDto.getRoom() ) );
+
+        return message;
+    }
+
     protected List<Message> messageDtoListToMessageList(List<MessageDto> list) {
         if ( list == null ) {
             return null;
@@ -226,57 +239,6 @@ public class UserInRoomMapperImpl implements UserInRoomMapper {
         }
 
         return list1;
-    }
-
-    protected BanInfo banInfoDtoToBanInfo(BanInfoDto banInfoDto) {
-        if ( banInfoDto == null ) {
-            return null;
-        }
-
-        BanInfo banInfo = new BanInfo();
-
-        banInfo.setId( banInfoDto.getId() );
-        banInfo.setMinutes( banInfoDto.getMinutes() );
-        banInfo.setDateOfBan( banInfoDto.getDateOfBan() );
-        banInfo.setUser( userDtoToUser( banInfoDto.getUser() ) );
-
-        return banInfo;
-    }
-
-    protected User userDtoToUser(UserDto userDto) {
-        if ( userDto == null ) {
-            return null;
-        }
-
-        User user = new User();
-
-        user.setId( userDto.getId() );
-        user.setUsername( userDto.getUsername() );
-        user.setPassword( userDto.getPassword() );
-        user.setBanned( userDto.isBanned() );
-        user.setRole( userDto.getRole() );
-        user.setListMessage( messageDtoListToMessageList( userDto.getListMessage() ) );
-        user.setListUserInRoom( userInRoomDtoListToUserInRoomList( userDto.getListUserInRoom() ) );
-        user.setBanInfo( banInfoDtoToBanInfo( userDto.getBanInfo() ) );
-
-        return user;
-    }
-
-    protected Message messageDtoToMessage(MessageDto messageDto) {
-        if ( messageDto == null ) {
-            return null;
-        }
-
-        Message message = new Message();
-
-        message.setId( messageDto.getId() );
-        message.setValue( messageDto.getValue() );
-        message.setDateOfSend( messageDto.getDateOfSend() );
-        message.setCommand( messageDto.isCommand() );
-        message.setUser( userDtoToUser( messageDto.getUser() ) );
-        message.setRoom( roomDtoToRoom( messageDto.getRoom() ) );
-
-        return message;
     }
 
     protected Room roomDtoToRoom(RoomDto roomDto) {

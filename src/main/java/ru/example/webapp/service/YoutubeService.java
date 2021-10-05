@@ -12,6 +12,7 @@ import com.google.api.services.youtube.model.VideoListResponse;
 import org.springframework.stereotype.Service;
 import ru.example.webapp.domain.dto.video.VideoDto;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,18 +37,28 @@ public class YoutubeService {
         search.setType(list4);
         SearchListResponse searchResponse = search.execute();
         List<SearchResult> searchResultList = searchResponse.getItems();
-        Optional<SearchResult> result = searchResultList.stream().filter(x -> x.getSnippet().getChannelTitle().equals(channelName)).findFirst();
-        Collections.addAll(list2, "statistics","snippet");
-        YouTube.Videos.List videos = youtube.videos().list(list2);
-        list3.add(result.get().getId().getVideoId());
-        videos.setId(list3);
-        VideoListResponse videoListResponse = videos.execute();
-        List<Video> findedVideo = videoListResponse.getItems();
+        BigInteger likes = BigInteger.valueOf(0);
+        BigInteger viewers = BigInteger.valueOf(0);
+        String url = "https://www.youtube.com/watch?v=";
+        for(SearchResult searchResult : searchResultList) {
+            Collections.addAll(list2, "statistics", "snippet");
+            YouTube.Videos.List videos = youtube.videos().list(list2);
+            list3.add(searchResult.getId().getVideoId());
+            videos.setId(list3);
+            videos.setKey(apiKey);
+            VideoListResponse videoListResponse = videos.execute();
+            List<Video> findedVideo = videoListResponse.getItems();
+            if(findedVideo.get(0).getSnippet().getChannelTitle().equals(channelName)) {
+                url += findedVideo.get(0).getId();
+                likes= findedVideo.get(0).getStatistics().getLikeCount();
+                viewers = findedVideo.get(0).getStatistics().getViewCount();
+                break;
+            }
+        }
         VideoDto video = new VideoDto();
-        String url = "https://www.youtube.com/watch?v=" + findedVideo.get(0).getId();
         video.setUrl(url);
-        video.setLikes(findedVideo.get(0).getStatistics().getLikeCount());
-        video.setViewers(findedVideo.get(0).getStatistics().getViewCount());
+        video.setLikes(likes);
+        video.setViewers(viewers);
         return video;
     }
 

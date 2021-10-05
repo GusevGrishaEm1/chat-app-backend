@@ -34,13 +34,4 @@ public class User {
     @Column(name = "role")
     private Role role;
 
-    @OneToMany(mappedBy = "user")
-    private List<Message> listMessage = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<UserInRoom> listUserInRoom = new ArrayList<>();
-
-    @OneToOne(mappedBy = "user")
-    private  BanInfo banInfo;
-
 }

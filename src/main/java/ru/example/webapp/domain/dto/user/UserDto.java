@@ -27,10 +27,4 @@ public class UserDto {
 
     private Role role;
 
-    private BanInfoDto banInfo;
-
-    private List<MessageDto> listMessage;
-
-    private List<UserInRoomDto> listUserInRoom;
-
 }

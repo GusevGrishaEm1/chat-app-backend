@@ -136,7 +136,7 @@ public class ChatBotService {
             case ("//yBot find -v -l "):
                 temp1 = message.getValue().split("[\\{\\}]+")[1];
                 temp2 = message.getValue().split("[\\{\\}]+")[3];
-                return new ResponseEntity<VideoDto>(youtubeService.findVideo(temp1,temp2), HttpStatus.OK);
+                return new ResponseEntity<VideoDto>(youtubeService.findVideo(temp1, temp2), HttpStatus.OK);
             case ("//yBot help "):
                 return new ResponseEntity<List<String>>(commandsService.getlistYBotCommands(), HttpStatus.OK);
             case ("//help"):
