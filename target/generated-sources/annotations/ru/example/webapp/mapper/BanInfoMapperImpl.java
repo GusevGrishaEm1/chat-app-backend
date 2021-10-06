@@ -11,7 +11,7 @@ import ru.example.webapp.domain.dto.user.UserDto;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-10-05T12:14:43+0400",
+    date = "2021-10-06T12:43:23+0400",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 1.8.0_301 (Oracle Corporation)"
 )
 public class BanInfoMapperImpl implements BanInfoMapper {

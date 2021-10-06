@@ -18,8 +18,6 @@ public class UserInRoomDtoRequest {
 
     private boolean disconnected;
 
-    private DiscInfo discInfo;
-
     private RoomDto room;
 
     private UserDto user;

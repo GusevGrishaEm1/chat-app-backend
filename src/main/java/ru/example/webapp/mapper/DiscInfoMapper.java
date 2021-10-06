@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface DiscInfoMapper {
 
-    public DiscInfoMapper INSTANCE = Mappers.getMapper( DiscInfoMapper.class );
+    DiscInfoMapper INSTANCE = Mappers.getMapper( DiscInfoMapper.class );
 
     DiscInfoDto toDto(DiscInfo discInfo);
 

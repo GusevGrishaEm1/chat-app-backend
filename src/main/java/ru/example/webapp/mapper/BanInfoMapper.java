@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 public interface BanInfoMapper {
 
-    public BanInfoMapper INSTANCE = Mappers.getMapper( BanInfoMapper.class );
+    BanInfoMapper INSTANCE = Mappers.getMapper( BanInfoMapper.class );
 
     BanInfoDto toDto(BanInfo banInfo);
 

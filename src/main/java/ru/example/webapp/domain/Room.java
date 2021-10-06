@@ -29,10 +29,4 @@ public class Room {
     @Column(name = "privateRoom")
     private boolean privateRoom;
 
-    @OneToMany(mappedBy = "room")
-    private List<Message> listMessage = new ArrayList<>();
-
-    @OneToMany(mappedBy = "room")
-    private List<UserInRoom> listUserInRoom = new ArrayList<>();
-
 }

@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 public interface UserInRoomMapper {
 
-    public UserInRoomMapper INSTANCE = Mappers.getMapper( UserInRoomMapper.class );
+    UserInRoomMapper INSTANCE = Mappers.getMapper( UserInRoomMapper.class );
 
     UserInRoomDto toDto(UserInRoom userInRoom);
 

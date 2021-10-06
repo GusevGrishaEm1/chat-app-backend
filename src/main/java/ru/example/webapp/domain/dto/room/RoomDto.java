@@ -24,8 +24,4 @@ public class RoomDto {
 
     private boolean privateRoom;
 
-    private List<MessageDto> listMessage;
-
-    private List<UserInRoomDto> listUserInRoom;
-
 }

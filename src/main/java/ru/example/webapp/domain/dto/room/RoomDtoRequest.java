@@ -22,7 +22,4 @@ public class RoomDtoRequest {
 
     private boolean privateRoom;
 
-    private List<MessageDto> listMessage;
-
-    private List<UserInRoomDto> listUserInRoom;
 }

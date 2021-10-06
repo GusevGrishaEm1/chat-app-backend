@@ -19,8 +19,6 @@ public class UserInRoomDto {
 
     private boolean disconnected;
 
-    private DiscInfoDto discInfo;
-
     private RoomDto room;
 
     private UserDto user;

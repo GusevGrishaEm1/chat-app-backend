@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 public interface MessageMapper {
 
-    public MessageMapper INSTANCE = Mappers.getMapper( MessageMapper.class );
+    MessageMapper INSTANCE = Mappers.getMapper( MessageMapper.class );
 
     MessageDto toDto(Message message);
 

@@ -20,9 +20,6 @@ public class UserInRoom {
     @Column(name = "disconnected")
     private boolean disconnected;
 
-    @OneToOne(mappedBy = "userInRoom")
-    private DiscInfo discInfo;
-
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "room_id")
     private Room room;

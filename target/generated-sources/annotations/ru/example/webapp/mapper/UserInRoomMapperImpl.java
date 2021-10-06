@@ -3,21 +3,17 @@ package ru.example.webapp.mapper;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Generated;
-import ru.example.webapp.domain.DiscInfo;
-import ru.example.webapp.domain.Message;
 import ru.example.webapp.domain.Room;
 import ru.example.webapp.domain.User;
 import ru.example.webapp.domain.UserInRoom;
-import ru.example.webapp.domain.dto.DiscInfoDto;
 import ru.example.webapp.domain.dto.UserInRoomDto;
 import ru.example.webapp.domain.dto.UserInRoomDtoRequest;
-import ru.example.webapp.domain.dto.message.MessageDto;
 import ru.example.webapp.domain.dto.room.RoomDto;
 import ru.example.webapp.domain.dto.user.UserDto;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-10-05T12:14:43+0400",
+    date = "2021-10-06T12:43:24+0400",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 1.8.0_301 (Oracle Corporation)"
 )
 public class UserInRoomMapperImpl implements UserInRoomMapper {
@@ -33,7 +29,6 @@ public class UserInRoomMapperImpl implements UserInRoomMapper {
         userInRoomDto.setId( userInRoom.getId() );
         userInRoomDto.setOwner( userInRoom.isOwner() );
         userInRoomDto.setDisconnected( userInRoom.isDisconnected() );
-        userInRoomDto.setDiscInfo( discInfoToDiscInfoDto( userInRoom.getDiscInfo() ) );
         userInRoomDto.setRoom( roomToRoomDto( userInRoom.getRoom() ) );
         userInRoomDto.setUser( userToUserDto( userInRoom.getUser() ) );
 
@@ -65,7 +60,6 @@ public class UserInRoomMapperImpl implements UserInRoomMapper {
         userInRoom1.setId( userInRoom.getId() );
         userInRoom1.setOwner( userInRoom.isOwner() );
         userInRoom1.setDisconnected( userInRoom.isDisconnected() );
-        userInRoom1.setDiscInfo( discInfoDtoToDiscInfo( userInRoom.getDiscInfo() ) );
         userInRoom1.setRoom( roomDtoToRoom( userInRoom.getRoom() ) );
         userInRoom1.setUser( userDtoToUser( userInRoom.getUser() ) );
 
@@ -82,26 +76,25 @@ public class UserInRoomMapperImpl implements UserInRoomMapper {
 
         userInRoom1.setOwner( userInRoom.isOwner() );
         userInRoom1.setDisconnected( userInRoom.isDisconnected() );
-        userInRoom1.setDiscInfo( userInRoom.getDiscInfo() );
         userInRoom1.setRoom( roomDtoToRoom( userInRoom.getRoom() ) );
         userInRoom1.setUser( userDtoToUser( userInRoom.getUser() ) );
 
         return userInRoom1;
     }
 
-    protected DiscInfoDto discInfoToDiscInfoDto(DiscInfo discInfo) {
-        if ( discInfo == null ) {
+    protected RoomDto roomToRoomDto(Room room) {
+        if ( room == null ) {
             return null;
         }
 
-        DiscInfoDto discInfoDto = new DiscInfoDto();
+        RoomDto roomDto = new RoomDto();
 
-        discInfoDto.setId( discInfo.getId() );
-        discInfoDto.setMinutes( discInfo.getMinutes() );
-        discInfoDto.setDateOfDisc( discInfo.getDateOfDisc() );
-        discInfoDto.setUserInRoom( toDto( discInfo.getUserInRoom() ) );
+        roomDto.setId( room.getId() );
+        roomDto.setName( room.getName() );
+        roomDto.setType( room.getType() );
+        roomDto.setPrivateRoom( room.isPrivateRoom() );
 
-        return discInfoDto;
+        return roomDto;
     }
 
     protected UserDto userToUserDto(User user) {
@@ -120,66 +113,19 @@ public class UserInRoomMapperImpl implements UserInRoomMapper {
         return userDto;
     }
 
-    protected MessageDto messageToMessageDto(Message message) {
-        if ( message == null ) {
+    protected Room roomDtoToRoom(RoomDto roomDto) {
+        if ( roomDto == null ) {
             return null;
         }
 
-        MessageDto messageDto = new MessageDto();
+        Room room = new Room();
 
-        messageDto.setId( message.getId() );
-        messageDto.setValue( message.getValue() );
-        messageDto.setDateOfSend( message.getDateOfSend() );
-        messageDto.setCommand( message.isCommand() );
-        messageDto.setUser( userToUserDto( message.getUser() ) );
-        messageDto.setRoom( roomToRoomDto( message.getRoom() ) );
+        room.setId( roomDto.getId() );
+        room.setName( roomDto.getName() );
+        room.setType( roomDto.getType() );
+        room.setPrivateRoom( roomDto.isPrivateRoom() );
 
-        return messageDto;
-    }
-
-    protected List<MessageDto> messageListToMessageDtoList(List<Message> list) {
-        if ( list == null ) {
-            return null;
-        }
-
-        List<MessageDto> list1 = new ArrayList<MessageDto>( list.size() );
-        for ( Message message : list ) {
-            list1.add( messageToMessageDto( message ) );
-        }
-
-        return list1;
-    }
-
-    protected RoomDto roomToRoomDto(Room room) {
-        if ( room == null ) {
-            return null;
-        }
-
-        RoomDto roomDto = new RoomDto();
-
-        roomDto.setId( room.getId() );
-        roomDto.setName( room.getName() );
-        roomDto.setType( room.getType() );
-        roomDto.setPrivateRoom( room.isPrivateRoom() );
-        roomDto.setListMessage( messageListToMessageDtoList( room.getListMessage() ) );
-        roomDto.setListUserInRoom( toDto( room.getListUserInRoom() ) );
-
-        return roomDto;
-    }
-
-    protected DiscInfo discInfoDtoToDiscInfo(DiscInfoDto discInfoDto) {
-        if ( discInfoDto == null ) {
-            return null;
-        }
-
-        DiscInfo discInfo = new DiscInfo();
-
-        discInfo.setId( discInfoDto.getId() );
-        discInfo.setMinutes( discInfoDto.getMinutes() );
-        discInfo.setDateOfDisc( discInfoDto.getDateOfDisc() );
-        discInfo.setUserInRoom( toEntity( discInfoDto.getUserInRoom() ) );
-
-        return discInfo;
+        return room;
     }
 
     protected User userDtoToUser(UserDto userDto) {
@@ -196,65 +142,5 @@ public class UserInRoomMapperImpl implements UserInRoomMapper {
         user.setRole( userDto.getRole() );
 
         return user;
-    }
-
-    protected Message messageDtoToMessage(MessageDto messageDto) {
-        if ( messageDto == null ) {
-            return null;
-        }
-
-        Message message = new Message();
-
-        message.setId( messageDto.getId() );
-        message.setValue( messageDto.getValue() );
-        message.setDateOfSend( messageDto.getDateOfSend() );
-        message.setCommand( messageDto.isCommand() );
-        message.setUser( userDtoToUser( messageDto.getUser() ) );
-        message.setRoom( roomDtoToRoom( messageDto.getRoom() ) );
-
-        return message;
-    }
-
-    protected List<Message> messageDtoListToMessageList(List<MessageDto> list) {
-        if ( list == null ) {
-            return null;
-        }
-
-        List<Message> list1 = new ArrayList<Message>( list.size() );
-        for ( MessageDto messageDto : list ) {
-            list1.add( messageDtoToMessage( messageDto ) );
-        }
-
-        return list1;
-    }
-
-    protected List<UserInRoom> userInRoomDtoListToUserInRoomList(List<UserInRoomDto> list) {
-        if ( list == null ) {
-            return null;
-        }
-
-        List<UserInRoom> list1 = new ArrayList<UserInRoom>( list.size() );
-        for ( UserInRoomDto userInRoomDto : list ) {
-            list1.add( toEntity( userInRoomDto ) );
-        }
-
-        return list1;
-    }
-
-    protected Room roomDtoToRoom(RoomDto roomDto) {
-        if ( roomDto == null ) {
-            return null;
-        }
-
-        Room room = new Room();
-
-        room.setId( roomDto.getId() );
-        room.setName( roomDto.getName() );
-        room.setType( roomDto.getType() );
-        room.setPrivateRoom( roomDto.isPrivateRoom() );
-        room.setListMessage( messageDtoListToMessageList( roomDto.getListMessage() ) );
-        room.setListUserInRoom( userInRoomDtoListToUserInRoomList( roomDto.getListUserInRoom() ) );
-
-        return room;
     }
 }
