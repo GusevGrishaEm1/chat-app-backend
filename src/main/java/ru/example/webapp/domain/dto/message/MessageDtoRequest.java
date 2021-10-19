@@ -15,14 +15,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class MessageDtoRequest {
 
-    private String value;
+    private String text;
 
     private LocalDateTime dateOfSend;
 
-    private boolean command;
+    private long userId;
 
-    private UserDto user;
-
-    private RoomDto room;
+    private long roomId;
 
 }

@@ -20,10 +20,10 @@ public class Room {
 
     @NotBlank(message = "Please, fill the name of room")
     @Length(max = 64, message = "name is too long" )
-    @Column(name = "name", unique = true)
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @Column(name = "type")
+    @Column(name = "type", nullable = false)
     private Type type;
 
     @Column(name = "privateRoom")

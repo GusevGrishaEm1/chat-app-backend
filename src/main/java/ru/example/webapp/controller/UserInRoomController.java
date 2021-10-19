@@ -2,8 +2,8 @@ package ru.example.webapp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.example.webapp.domain.dto.UserInRoomDto;
-import ru.example.webapp.domain.dto.UserInRoomDtoRequest;
+import ru.example.webapp.domain.dto.userInRoom.UserInRoomDto;
+import ru.example.webapp.domain.dto.userInRoom.UserInRoomDtoRequest;
 import ru.example.webapp.exception.UserInRoomNotFoundException;
 import ru.example.webapp.service.UserInRoomService;
 import java.util.List;

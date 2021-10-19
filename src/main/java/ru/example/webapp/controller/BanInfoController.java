@@ -2,8 +2,8 @@ package ru.example.webapp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.example.webapp.domain.dto.BanInfoDto;
-import ru.example.webapp.domain.dto.BanInfoDtoRequest;
+import ru.example.webapp.domain.dto.ban.BanInfoDto;
+import ru.example.webapp.domain.dto.ban.BanInfoDtoRequest;
 import ru.example.webapp.exception.BanInfoNotFoundException;
 import ru.example.webapp.service.BanInfoService;
 import java.util.List;

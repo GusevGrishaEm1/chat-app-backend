@@ -16,8 +16,8 @@ import ru.example.webapp.security.JwtTokenProvider;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private static final String LOGIN_ENDPOINT = "/users/login";
-    private static final String REGISTRATION_ENDPOINT = "/users/reg";
+    private static final String LOGIN_ENDPOINT = "/user/login";
+    private static final String REGISTRATION_ENDPOINT = "/user/reg";
 
     @Autowired
     public SecurityConfig(JwtTokenProvider jwtTokenProvider) {

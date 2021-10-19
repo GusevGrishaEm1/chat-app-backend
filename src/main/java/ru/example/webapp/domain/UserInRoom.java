@@ -1,12 +1,11 @@
 package ru.example.webapp.domain;
 
 import lombok.Data;
-import org.springframework.lang.Nullable;
 import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "userInRoom")
+@Table(name = "usr_in_room")
 public class UserInRoom {
 
     @Id
@@ -20,12 +19,12 @@ public class UserInRoom {
     @Column(name = "disconnected")
     private boolean disconnected;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "room_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usr_id", nullable = false)
     private User user;
 
 }

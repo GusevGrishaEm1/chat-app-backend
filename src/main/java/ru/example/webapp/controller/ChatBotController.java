@@ -1,15 +1,11 @@
 package ru.example.webapp.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import ru.example.webapp.domain.dto.UserInRoomAndMessageDto;
-import ru.example.webapp.exception.RoomNotFoundException;
-import ru.example.webapp.exception.UniqueUsernameException;
-import ru.example.webapp.exception.UserAccessException;
+import ru.example.webapp.domain.dto.room.CommandDto;
+import ru.example.webapp.exception.*;
 import ru.example.webapp.service.ChatBotService;
 import java.io.IOException;
 
@@ -25,13 +21,15 @@ public class ChatBotController {
     }
 
     @PostMapping
-    public ResponseEntity<?> parseMessage(@RequestBody UserInRoomAndMessageDto userInRoomAndMessage) throws
+    public ResponseEntity<?> parseMessage(@RequestBody CommandDto command) throws
             RoomNotFoundException,
             UniqueUsernameException,
             IOException,
-            UserAccessException
+            UserAccessException,
+            UserNotFoundException,
+            UserInRoomNotFoundException
     {
-       return chatBotService.parseCommand(userInRoomAndMessage.getMessage(), userInRoomAndMessage.getUserInRoom());
+       return chatBotService.sendCommand(command.getCommand(),command.getUserInRoomId());
     }
 
 

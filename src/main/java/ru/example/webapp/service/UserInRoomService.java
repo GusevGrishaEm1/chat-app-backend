@@ -8,13 +8,15 @@ import ru.example.webapp.domain.UserInRoom;
 import ru.example.webapp.domain.User;
 import ru.example.webapp.domain.dto.room.RoomDto;
 import ru.example.webapp.domain.dto.user.UserDto;
-import ru.example.webapp.domain.dto.UserInRoomDto;
-import ru.example.webapp.domain.dto.UserInRoomDtoRequest;
+import ru.example.webapp.domain.dto.userInRoom.UserInRoomDto;
+import ru.example.webapp.domain.dto.userInRoom.UserInRoomDtoRequest;
 import ru.example.webapp.exception.UserInRoomNotFoundException;
 import ru.example.webapp.mapper.RoomMapper;
 import ru.example.webapp.mapper.UserInRoomMapper;
 import ru.example.webapp.mapper.UserMapper;
+import ru.example.webapp.repository.RoomRepo;
 import ru.example.webapp.repository.UserInRoomRepo;
+import ru.example.webapp.repository.UserRepo;
 import java.util.List;
 
 @Service
@@ -23,6 +25,12 @@ public class UserInRoomService {
     @Autowired
     private UserInRoomRepo userInRoomRepo;
 
+    @Autowired
+    private UserRepo userRepo;
+
+    @Autowired
+    private RoomRepo roomRepo;
+
     private UserInRoomMapper userInRoomMapper;
 
     private UserMapper userMapper;
@@ -30,8 +38,12 @@ public class UserInRoomService {
     private RoomMapper roomMapper;
 
     @Transactional
-    public UserInRoomDto addUserInRoom(UserInRoomDtoRequest userInRoomDtoRequest) {
-        UserInRoom userInRoomEntity = userInRoomMapper.INSTANCE.toEntity(userInRoomDtoRequest);
+    public UserInRoomDto addUserInRoom(UserInRoomDtoRequest userInRoom) {
+        UserInRoom userInRoomEntity = userInRoomMapper.INSTANCE.toEntity(userInRoom);
+        User user = userRepo.findById(userInRoom.getUserId());
+        Room room = roomRepo.findById(userInRoom.getRoomId());
+        userInRoomEntity.setUser(user);
+        userInRoomEntity.setRoom(room);
         userInRoomRepo.save(userInRoomEntity);
         return userInRoomMapper.INSTANCE.toDto(userInRoomEntity);
     }
@@ -46,8 +58,10 @@ public class UserInRoomService {
     }
 
     @Transactional
-    public UserInRoomDto editUserInRoom(UserInRoomDto userInRoomDto) {
-        UserInRoom userInRoomEntity = userInRoomMapper.toEntity(userInRoomDto);
+    public UserInRoomDto editUserInRoom(UserInRoomDto userInRoom) {
+        UserInRoom userInRoomEntity = userInRoomRepo.findById(userInRoom.getId());
+        userInRoomEntity.setDisconnected(userInRoom.isDisconnected());
+        userInRoomEntity.setOwner(userInRoom.isOwner());
         userInRoomRepo.save(userInRoomEntity);
         return userInRoomMapper.INSTANCE.toDto(userInRoomEntity);
     }
@@ -72,10 +86,10 @@ public class UserInRoomService {
         }
     }
 
-    public UserInRoomDto getByUserAndRoom(UserDto user, RoomDto room) {
-        User userDB = userMapper.INSTANCE.toEntity(user);
-        Room roomDB = roomMapper.INSTANCE.toEntity(room);
-        return userInRoomMapper.INSTANCE.toDto(userInRoomRepo.findByUserAndRoom(userDB, roomDB));
+    public UserInRoomDto getByUserAndRoom(UserDto userDto, RoomDto roomDto) {
+        User user = userMapper.INSTANCE.toEntity(userDto);
+        Room room = roomMapper.INSTANCE.toEntity(roomDto);
+        return userInRoomMapper.INSTANCE.toDto(userInRoomRepo.findByUserAndRoom(user, room));
     }
 
 }

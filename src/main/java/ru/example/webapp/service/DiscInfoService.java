@@ -4,24 +4,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.example.webapp.domain.DiscInfo;
-import ru.example.webapp.domain.dto.DiscInfoDto;
-import ru.example.webapp.domain.dto.DiscInfoDtoRequest;
+import ru.example.webapp.domain.UserInRoom;
+import ru.example.webapp.domain.dto.disc.DiscInfoDto;
+import ru.example.webapp.domain.dto.disc.DiscInfoDtoRequest;
 import ru.example.webapp.exception.DiscInfoNotFoundException;
 import ru.example.webapp.mapper.DiscInfoMapper;
 import ru.example.webapp.repository.DiscInfoRepo;
+import ru.example.webapp.repository.UserInRoomRepo;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class DiscInfoService {
 
-    @Autowired
     private DiscInfoRepo discInfoRepo;
-
+    private UserInRoomRepo userInRoomRepo;
     private DiscInfoMapper discInfoMapper;
+
+    @Autowired
+    public DiscInfoService(DiscInfoRepo discInfoRepo, UserInRoomRepo userInRoomRepo) {
+        this.discInfoRepo = discInfoRepo;
+        this.userInRoomRepo = userInRoomRepo;
+    }
 
     @Transactional
     public DiscInfoDto addDiscInfo(DiscInfoDtoRequest discInfoDtoRequest) {
         DiscInfo discInfoEntity = discInfoMapper.INSTANCE.toEntity(discInfoDtoRequest);
+        UserInRoom userInRoom = userInRoomRepo.findById(discInfoDtoRequest.getUserInRoomId());
+        discInfoEntity.setDateOfDisc(LocalDateTime.now());
+        discInfoEntity.setUserInRoom(userInRoom);
         discInfoRepo.save(discInfoEntity);
         return discInfoMapper.INSTANCE.toDto(discInfoEntity);
     }
@@ -36,8 +47,9 @@ public class DiscInfoService {
     }
 
     @Transactional
-    public DiscInfoDto editDiscInfo(DiscInfoDto DiscInfoDto) {
-        DiscInfo discInfoEntity = discInfoMapper.INSTANCE.toEntity(DiscInfoDto);
+    public DiscInfoDto editDiscInfo(DiscInfoDto discInfo) {
+        DiscInfo discInfoEntity = discInfoRepo.findById(discInfo.getId());
+        discInfoEntity.setMinutes(discInfo.getMinutes());
         discInfoRepo.save(discInfoEntity);
         return discInfoMapper.INSTANCE.toDto(discInfoEntity);
     }

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name="user")
+@Table(name="usr")
 public class User {
 
     @Id
@@ -20,18 +20,18 @@ public class User {
 
     @NotBlank(message = "Please, fill the username")
     @Length(max = 64, message = "username is too long" )
-    @Column(name = "username", unique = true)
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
     @NotBlank(message = "Please, fill the password")
     @Length(max = 64, message = "password is too long" )
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "banned")
     private boolean banned;
 
-    @Column(name = "role")
+    @Column(name = "role", nullable = false)
     private Role role;
 
 }

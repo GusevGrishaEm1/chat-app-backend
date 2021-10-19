@@ -8,17 +8,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.example.webapp.domain.Role;
 import ru.example.webapp.domain.User;
-import ru.example.webapp.domain.dto.BanInfoDtoRequest;
+import ru.example.webapp.domain.dto.ban.BanInfoDtoRequest;
 import ru.example.webapp.domain.dto.user.UserDto;
 import ru.example.webapp.domain.dto.user.UserDtoRequest;
 import ru.example.webapp.domain.dto.auth.UsernamePasswordDtoRequest;
+import ru.example.webapp.domain.dto.userInRoom.UserInRoomDto;
 import ru.example.webapp.exception.*;
 import ru.example.webapp.mapper.UserMapper;
 import ru.example.webapp.repository.UserRepo;
 import ru.example.webapp.security.JwtTokenProvider;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,16 +26,26 @@ import java.util.Map;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepo userRepo;
-    @Autowired
-    private BanInfoService banInfoService;
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    private final UserRepo userRepo;
+    private final BanInfoService banInfoService;
+    private final UserInRoomService userInRoomService;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private UserMapper userMapper;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-
+    @Autowired
+    public UserService(
+            UserRepo userRepo,
+            BanInfoService banInfoService,
+            UserInRoomService userInRoomService,
+            JwtTokenProvider jwtTokenProvider)
+    {
+        this.userRepo = userRepo;
+        this.banInfoService = banInfoService;
+        this.userInRoomService = userInRoomService;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.bCryptPasswordEncoder =  new BCryptPasswordEncoder();
+    }
 
 
     @Transactional
@@ -91,48 +101,78 @@ public class UserService {
         }
     }
 
-    public UserDto setModeratorStatus(UserDto whoGives,
-                                      UserDto whoIsGiven) throws UserAccessException, UniqueUsernameException {
-        if (whoGives.getRole() == Role.ADMIN) {
-            whoIsGiven.setRole(Role.MODERATOR);
-            return editUser(whoIsGiven);
+    public UserDto setModeratorStatus(long userInRoomId, String username) throws
+            UserAccessException,
+            UniqueUsernameException,
+            UserNotFoundException,
+            UserInRoomNotFoundException
+    {
+        UserInRoomDto firstUserInRoom = userInRoomService.getUserInRoom(userInRoomId);
+        UserDto firstUser = getUser(firstUserInRoom.getUserId());
+        if (firstUser.getRole() == Role.ADMIN) {
+            UserDto secondUser = getByUsername(username);
+            secondUser.setRole(Role.MODERATOR);
+            return editUser(secondUser);
         } else {
-            throw new UserAccessException("User " + whoGives.getUsername() + " does not have permission to do this");
+            throw new UserAccessException("User " + firstUser.getUsername() + " does not have permission to do this");
         }
     }
 
-    public UserDto removeModeratorStatus(UserDto whoRemoves,
-                                         UserDto whoIsRemoved) throws UserAccessException, UniqueUsernameException {
-        if (whoRemoves.getRole() == Role.ADMIN) {
-            whoIsRemoved.setRole(Role.USER);
-            return editUser(whoIsRemoved);
+    public UserDto deleteModeratorStatus(long userInRoomId, String username) throws
+            UserAccessException,
+            UniqueUsernameException,
+            UserNotFoundException,
+            UserInRoomNotFoundException
+    {
+        UserInRoomDto firstUserInRoom = userInRoomService.getUserInRoom(userInRoomId);
+        UserDto firstUser = getUser(firstUserInRoom.getUserId());
+        if (firstUser.getRole() == Role.ADMIN) {
+            UserDto secondUser = getByUsername(username);
+            secondUser.setRole(Role.USER);
+            return editUser(secondUser);
         } else {
-            throw new UserAccessException("User " + whoRemoves.getUsername() + " does not have permission to do this");
+            throw new UserAccessException("User " + firstUser.getUsername() + " does not have permission to do this");
         }
     }
 
-    public UserDto banUser(UserDto whoBans,
-                           UserDto whoIsBanned,
-                           BanInfoDtoRequest banInfoDtoRequest) throws UniqueUsernameException, UserAccessException {
-        if (whoBans.getRole() == Role.ADMIN || whoBans.getRole() == Role.MODERATOR) {
-            whoIsBanned.setBanned(true);
-            banInfoDtoRequest.setDateOfBan(LocalDateTime.now());
-            banInfoDtoRequest.setUser(whoIsBanned);
-            banInfoService.addBanInfo(banInfoDtoRequest);
-            return editUser(whoIsBanned);
+    public UserDto banUser(long userInRoomId, String username, int minutes) throws
+            UniqueUsernameException,
+            UserAccessException,
+            UserInRoomNotFoundException,
+            UserNotFoundException
+    {
+        UserInRoomDto firstUserInRoom = userInRoomService.getUserInRoom(userInRoomId);
+        UserDto firstUser = getUser(firstUserInRoom.getUserId());
+        if (firstUser.getRole() == Role.ADMIN || firstUser.getRole() == Role.MODERATOR) {
+            UserDto secondUser = getByUsername(username);
+            secondUser.setBanned(true);
+            editUser(secondUser);
+            BanInfoDtoRequest banInfo = new BanInfoDtoRequest();
+            banInfo.setUserId(secondUser.getId());
+            banInfo.setMinutes(minutes);
+            banInfoService.addBanInfo(banInfo);
+            return editUser(secondUser);
         } else {
-            throw new UserAccessException("User " + whoBans.getUsername() + " does not have permission to do this");
+            throw new UserAccessException("User " + firstUser.getUsername() + " does not have permission to do this");
         }
     }
 
-    public UserDto unbanUser(UserDto whoUnbans,
-                             UserDto whoIsUnbanned) throws UserAccessException, UniqueUsernameException, BanInfoNotFoundException {
-        if (whoUnbans.getRole() == Role.ADMIN || whoUnbans.getRole() == Role.MODERATOR) {
-            whoIsUnbanned.setBanned(false);
-            banInfoService.deleteBanInfo(whoIsUnbanned.getId());
-            return editUser(whoIsUnbanned);
+    public UserDto unbanUser(long userInRoomId, String username) throws
+            UserAccessException,
+            UniqueUsernameException,
+            BanInfoNotFoundException,
+            UserInRoomNotFoundException,
+            UserNotFoundException
+    {
+        UserInRoomDto firstUserInRoom = userInRoomService.getUserInRoom(userInRoomId);
+        UserDto firstUser = getUser(firstUserInRoom.getUserId());
+        if (firstUser.getRole() == Role.ADMIN || firstUser.getRole() == Role.MODERATOR) {
+            UserDto secondUser = getByUsername(username);
+            secondUser.setBanned(false);
+            banInfoService.deleteBanInfo(secondUser.getId());
+            return editUser(secondUser);
         } else {
-            throw new UserAccessException("User " + whoUnbans.getUsername() + " does not have permission to do this");
+            throw new UserAccessException("User " + firstUser.getUsername() + " does not have permission to do this");
         }
     }
 
@@ -170,20 +210,28 @@ public class UserService {
 
     public void logout(HttpServletRequest httpServletRequest , HttpServletResponse httpServletResponse) {
         SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
-        securityContextLogoutHandler.logout(httpServletRequest,httpServletResponse,null);
+        securityContextLogoutHandler.logout(httpServletRequest, httpServletResponse, null);
     }
 
     public UserDto getByUsername(String username) {
         return userMapper.INSTANCE.toDto(userRepo.findByUsername(username));
     }
 
-    public UserDto renameUser(UserDto whoRename, UserDto whoIsRenamed, String newUsername) throws UniqueUsernameException, UserAccessException {
-        if(whoRename.getRole()==Role.ADMIN) {
-            whoIsRenamed.setUsername(newUsername);
-            return editUser(whoIsRenamed);
+    public UserDto renameUser(long userInRoomId, String oldUsername, String newUsername) throws
+            UniqueUsernameException,
+            UserAccessException,
+            UserInRoomNotFoundException,
+            UserNotFoundException
+    {
+        UserInRoomDto firstUserInRoom = userInRoomService.getUserInRoom(userInRoomId);
+        UserDto firstUser = getUser(firstUserInRoom.getUserId());
+        if(firstUser.getRole()==Role.ADMIN || firstUserInRoom.isOwner()) {
+            UserDto secondUser = getByUsername(oldUsername);
+            secondUser.setUsername(newUsername);
+            return editUser(secondUser);
         }
         else {
-            throw new UserAccessException("User " + whoRename.getUsername() + " does not have permission to do this");
+            throw new UserAccessException("User " + firstUser.getUsername() + " does not have permission to do this");
         }
     }
 

@@ -4,26 +4,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.example.webapp.domain.BanInfo;
-import ru.example.webapp.domain.dto.BanInfoDto;
-import ru.example.webapp.domain.dto.BanInfoDtoRequest;
+import ru.example.webapp.domain.User;
+import ru.example.webapp.domain.dto.ban.BanInfoDto;
+import ru.example.webapp.domain.dto.ban.BanInfoDtoRequest;
 import ru.example.webapp.exception.BanInfoNotFoundException;
 import ru.example.webapp.mapper.BanInfoMapper;
 import ru.example.webapp.repository.BanInfoRepo;
+import ru.example.webapp.repository.UserRepo;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class BanInfoService {
 
-    @Autowired
     private BanInfoRepo banInfoRepo;
-
+    private UserRepo userRepo;
     private BanInfoMapper banInfoMapper;
 
+    @Autowired
+    public BanInfoService(BanInfoRepo banInfoRepo, UserRepo userRepo) {
+        this.banInfoRepo = banInfoRepo;
+        this.userRepo = userRepo;
+    }
+
     @Transactional
-    public BanInfoDto addBanInfo(BanInfoDtoRequest banInfoDtoRequest) {
-        BanInfo banInfoEntity = banInfoMapper.INSTANCE.toEntity(banInfoDtoRequest);
+    public BanInfoDto addBanInfo(BanInfoDtoRequest banInfo) {
+        BanInfo banInfoEntity = banInfoMapper.INSTANCE.toEntity(banInfo);
+        User user = userRepo.findById(banInfo.getUserId());
+        banInfoEntity.setDateOfBan(LocalDateTime.now());
+        banInfoEntity.setUser(user);
         banInfoRepo.save(banInfoEntity);
-        return banInfoMapper.toDto(banInfoEntity);
+        return banInfoMapper.INSTANCE.toDto(banInfoEntity);
     }
 
     public long deleteBanInfo(long id) throws BanInfoNotFoundException {
@@ -37,9 +48,9 @@ public class BanInfoService {
 
     @Transactional
     public BanInfoDto editBanInfo(BanInfoDto banInfoDto) {
-        BanInfo banInfoEntity = banInfoMapper.toEntity(banInfoDto);
+        BanInfo banInfoEntity = banInfoMapper.INSTANCE.toEntity(banInfoDto);
         banInfoRepo.save(banInfoEntity);
-        return banInfoMapper.toDto(banInfoEntity);
+        return banInfoMapper.INSTANCE.toDto(banInfoEntity);
     }
 
     @Transactional(readOnly = true)
@@ -48,17 +59,17 @@ public class BanInfoService {
         if (banInfoEntity==null)
             throw new BanInfoNotFoundException("BanInfo with id " + id + " not found");
         else {
-            return banInfoMapper.toDto(banInfoEntity);
+            return banInfoMapper.INSTANCE.toDto(banInfoEntity);
         }
     }
 
     @Transactional(readOnly = true)
     public List<BanInfoDto> getListBanInfo()throws BanInfoNotFoundException {
-        List<BanInfo> messages = banInfoRepo.findAll();
-        if (messages.isEmpty())
+        List<BanInfo> banInfoList = banInfoRepo.findAll();
+        if (banInfoList.isEmpty())
             throw new BanInfoNotFoundException("BanInfoList is empty");
         else {
-            return banInfoMapper.toDto(messages);
+            return banInfoMapper.INSTANCE.toDto(banInfoList);
         }
     }
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.example.webapp.domain.dto.message.MessageDtoRequest;
+import ru.example.webapp.domain.dto.userInRoom.UserInRoomDto;
 
 @Getter
 @Setter

@@ -1,0 +1,1 @@
+insert into message (id, text, date_of_send, usr_id, room_id) values (999, 'Hello, Frank How are you?',now(), 1789, 1321);

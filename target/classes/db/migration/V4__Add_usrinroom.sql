@@ -1,0 +1,1 @@
+insert into usr_in_room (id, owner, disconnected, usr_id, room_id) values(1234, false, false, 1789, 1321);

@@ -3,7 +3,9 @@ package ru.example.webapp.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.example.webapp.domain.dto.BanInfoDtoRequest;
+import ru.example.webapp.domain.dto.ban.BanUserDto;
+import ru.example.webapp.domain.dto.ban.UnbanUserDto;
+import ru.example.webapp.domain.dto.moder.UpdateModeratorStatusDto;
 import ru.example.webapp.domain.dto.user.*;
 import ru.example.webapp.domain.dto.auth.UsernamePasswordDtoRequest;
 import ru.example.webapp.exception.*;
@@ -13,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -44,37 +46,45 @@ public class UserController {
         return userService.editUser(user);
     }
 
-    @PutMapping("/add/moderator")
-    public UserDto addStatusModerator(@RequestBody SetModeratorStatusDto setModeratorStatusDto) throws UniqueUsernameException, UserAccessException {
-        return userService.setModeratorStatus(
-                setModeratorStatusDto.getWhoGives(),
-                setModeratorStatusDto.getWhoIsGiven()
-        );
+    @PutMapping("/mod")
+    public UserDto addStatusModerator(@RequestBody UpdateModeratorStatusDto moderatorStatus) throws
+            UniqueUsernameException,
+            UserAccessException,
+            UserNotFoundException,
+            UserInRoomNotFoundException
+    {
+        return userService.setModeratorStatus(moderatorStatus.getUserInRoomId(), moderatorStatus.getUsername());
     }
 
-    @PutMapping("/delete/moderator")
-    public UserDto deleteStatusModerator(@RequestBody RemoveModeratorStatusDto removeModeratorStatusDto) throws UniqueUsernameException, UserAccessException {
-        return userService.removeModeratorStatus(
-                removeModeratorStatusDto.getWhoRemoves(),
-                removeModeratorStatusDto.getWhoIsRemoved()
-        );
+    @PutMapping("/unmod")
+    public UserDto deleteStatusModerator(@RequestBody UpdateModeratorStatusDto moderatorStatus) throws
+            UniqueUsernameException,
+            UserAccessException,
+            UserNotFoundException,
+            UserInRoomNotFoundException
+    {
+        return userService.deleteModeratorStatus(moderatorStatus.getUserInRoomId(), moderatorStatus.getUsername());
     }
 
     @PutMapping("/unban")
-    public UserDto banUser(@RequestBody BanUserDto banUserDto) throws UniqueUsernameException, UserAccessException {
-        return userService.banUser(
-                banUserDto.getWhoBans(),
-                banUserDto.getWhoIsBanned(),
-                banUserDto.getBanInfoDtoRequest()
-        );
+    public UserDto banUser(@RequestBody BanUserDto banUser) throws
+            UniqueUsernameException,
+            UserAccessException,
+            UserNotFoundException,
+            UserInRoomNotFoundException
+    {
+        return userService.banUser(banUser.getUserInRoomId(), banUser.getUsername(), banUser.getMinutes());
     }
 
     @PutMapping("/ban")
-    public UserDto unbanUser(@RequestBody UnbanUserDto unbanUserDto) throws UniqueUsernameException, UserAccessException, BanInfoNotFoundException {
-        return userService.unbanUser(
-                unbanUserDto.getWhoUnbans(),
-                unbanUserDto.getWhoIsUnbanned()
-        );
+    public UserDto unbanUser(@RequestBody UnbanUserDto unbanUser) throws
+            UniqueUsernameException,
+            UserAccessException,
+            BanInfoNotFoundException,
+            UserNotFoundException,
+            UserInRoomNotFoundException
+    {
+        return userService.unbanUser(unbanUser.getUserInRoomId(), unbanUser.getUsername());
     }
 
     @PostMapping("/login")

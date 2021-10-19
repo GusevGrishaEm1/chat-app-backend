@@ -1,9 +1,6 @@
 package ru.example.webapp.domain;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -21,21 +18,18 @@ public class Message {
 
     @NotBlank(message = "Please, fill the message")
     @Length(max = 1024, message = "message is too long")
-    @Column(name = "value")
-    private String value;
+    @Column(name = "text", nullable = false)
+    private String text;
 
-    @Column(name = "date_of_send")
+    @Column(name = "date_of_send", nullable = false)
     private LocalDateTime dateOfSend;
 
-    @Column(name = "command")
-    private boolean command;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usr_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "room_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
 }
