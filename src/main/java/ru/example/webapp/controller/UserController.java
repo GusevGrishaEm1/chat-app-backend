@@ -66,7 +66,7 @@ public class UserController {
         return userService.deleteModeratorStatus(moderatorStatus.getUserInRoomId(), moderatorStatus.getUsername());
     }
 
-    @PutMapping("/unban")
+    @PutMapping("/ban")
     public UserDto banUser(@RequestBody BanUserDto banUser) throws
             UniqueUsernameException,
             UserAccessException,
@@ -76,7 +76,7 @@ public class UserController {
         return userService.banUser(banUser.getUserInRoomId(), banUser.getUsername(), banUser.getMinutes());
     }
 
-    @PutMapping("/ban")
+    @PutMapping("/unban")
     public UserDto unbanUser(@RequestBody UnbanUserDto unbanUser) throws
             UniqueUsernameException,
             UserAccessException,

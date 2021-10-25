@@ -11,7 +11,7 @@ import ru.example.webapp.domain.dto.message.MessageDtoRequest;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-10-19T15:34:10+0400",
+    date = "2021-10-20T16:17:50+0400",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 1.8.0_301 (Oracle Corporation)"
 )
 public class MessageMapperImpl implements MessageMapper {
